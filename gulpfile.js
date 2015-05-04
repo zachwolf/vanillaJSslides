@@ -26,7 +26,9 @@ gulp.task('sass', function() {
     .pipe(sass())
     .pipe(gulp.dest('assets/styles/css'))
     .pipe(minify())
-    .pipe(rename('styles.min.css'))
+    .pipe(rename(function (path) {
+      path.extname = ".min.css"
+    }))
     .pipe(gulp.dest('assets/styles/production'));
 });
 

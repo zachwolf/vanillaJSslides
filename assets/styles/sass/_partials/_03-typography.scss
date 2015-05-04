@@ -1,211 +1,67 @@
-@include font-face($reg, 'proximanova-regular-webfont', '', 'sans-serif');
-@include font-face($bold, 'proximanova-bold-webfont', '', 'sans-serif');
-
+body {
+	font-family: 'Inconsolata', sans-serif;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 24px;
+	color: #fff;
+}
 
 h1,h2,h3,h4,h5,h6 {
-	font-weight: normal;
-	margin: 0 auto;
+	text-transform: lowercase;
 }
 
 .tera {
-	font-family: $bold;
-	font-size: 44px;
-	line-height: 36px;
-	letter-spacing: -2px;
-	color: #fff;
-
-	@media (min-width: $bp-lg) {
-		font-size: 56px;
-		line-height: 56px;
-	}
+	font-size: 32px;
+	line-height: 34px;
+	margin-bottom: 30px;
 }
 
 .giga {
-	font-family: $bold;
-	font-size: 24px;
-	line-height: 24px;
-	letter-spacing: 1px;
-	text-transform: uppercase;
-	color: $color-1;
-
-	@media (min-width: $bp-md) {
-		font-size: 30px;
-		line-height: 30px;
-	}
-}
-.giga-alt {
-	color: #fff;
+	font-size: 22px;
+	line-height: 30px;
+	margin-bottom: 30px;
 }
 
 .mega {
-	font-family: $reg;
-	font-size: 28px;
-	line-height: 28px;
-	color: $color-2;
-	margin-top: 15px;
+	font-size: 18px;
+	line-height: 24px;
+	margin-bottom: 30px;
 }
 
-.kilo {
-	font-family: $bold;
-	font-size: 16px;
-	line-height: 16px;
-	text-transform: uppercase;
-	color: $color-3;
+p {
 	margin-bottom: 15px;
-
-	@media (min-width: $bp-md) {
-		font-size: 20px;
-		line-height: 20px;
-	}
-}
-.kilo-color-1 {
-	color: $color-1;
-}
-.kilo-color-2 {
-	color: $color-2;
 }
 
-.hecto {
-	font-family: $bold;
-	font-size: 12px;
-	line-height: 12px;
-	letter-spacing: 1px;
-	text-transform: uppercase;
-	color: #fff;
-
-	@media (min-width: $bp-md) {
-		font-size: 18px;
-		line-height: 18px;
-	}
+p.summary {
+	font-size: 22px;
+	line-height: 30px;
+	margin-bottom: 0;
 }
 
-.deca {
-	font-family: $reg;
-	font-size: 12px;
-	line-height: 12px;
-	letter-spacing: 1px;
-	text-transform: uppercase;
-	color: #fff;
-
-	@media (min-width: $bp-md) {
-		font-size: 16px;
-		line-height: 16px;
-	}
+b, strong {
+	font-weight: 600;
 }
 
-.deci {
-	font-family: $reg;
-	font-size: 14px;
-	line-height: 14px;
-	color: $color-3;
-
-	@media (min-width: $bp-md) {
-		font-size: 16px;
-		line-height: 16px;
-	}
+i, em {
+	font-style: italic;
 }
 
 a:link,
-a:visited {
-	color: $color-2;
-	border-bottom: 2px solid $color-2;
+a:visited,
+a.active {
 	text-decoration: none;
+	color: #fff;
+	border-bottom: 3px solid #fff;
+	@include transition(all, 300ms, ease);
 }
 
 a:hover,
 a:focus {
-	border-bottom: none;
+	box-shadow: 10px #fff;
 }
 
-a.btn {
-	@include transition(all, 300ms, ease);
-}
-
-a.btn-default:link,
-a.btn-default:visited,
-input[type="submit"] {
-	background-color: $color-2;
-	border: 2px solid $color-2;
-	padding: 15px 20px;
-	font-family: $bold;
-	font-size: 12px;
-	letter-spacing: 1px;
-	text-transform: uppercase;
-	color: #fff;
-	cursor: pointer;
-}
-
-a.btn-default:hover,
-a.btn-default:focus,
-input[type="submit"]:hover,
-input[type="submit"]:focus {
-	background-color: transparent;
-	color: $color-2;
-}
-
-a.btn-alt:link,
-a.btn-alt:visited {
-	width: 100%;
-	max-width: 290px;
-	padding: 15px 20px;
-	border: 2px solid $color-2;
-	font-family: $bold;
-	font-size: 12px;
-	letter-spacing: 3px;
-	text-transform: uppercase;
-	color: #fff;
-}
-
-a.btn-alt:hover,
-a.btn-alt:focus {
-	background-color: $color-2;
-}
-
-a.block-link {
-	display: block;
-}
-
-
-address {
-	font-size: 14px;
-	line-height: 24px;
-	font-style: italic;
-	margin-bottom: 45px;
-}
-
-small {
-	font-size: 12px;
-	line-height: 14px;
-	text-transform: uppercase;
-}
-
-blockquote {
-	font-size: 16px;
-	line-height: 24px;
-	font-style: italic;
-}
-
-blockquote a {
-	display: inline-block;
-	margin-top: 30px;
-	font-family: $bold;
-	font-size: 12px;
-	line-height: 12px;
-	letter-spacing: 1px;
-	text-transform: uppercase;
-}
-
-.map-marker {
-	width: 12px;
-	vertical-align: middle;
-	margin-right: 4px;
-}
-
-.back-to-top {
-	cursor: pointer;
-}
-
-.arrow {
-	width: 18px;
-	margin-left: 4px;
+ol, ul {
+	list-style-type: decimal-leading-zero;
+	padding-left: 60px;
+	margin-bottom: 15px;
 }
