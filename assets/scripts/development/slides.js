@@ -4,7 +4,6 @@ function Slider( element ) {
 }
 Slider.prototype = {
 	init: function() {
-
 		var w = window,
 				y = window.innerHeight,
 				slideshowHeight = 0,
@@ -34,40 +33,64 @@ Slider.prototype = {
 		this.el.style.height = slideshowHeight + 'px';
 		this.getSlide( w, i );
 	},
-	getSlide: function( w, slideCount ) {
+	getSlide: function( w, slideTotal ) {
 		var slide = getParameterByName('slide'),
 				baseURL = w.location.protocol + '//' + w.location.host + w.location.pathname;
 		if( slide !== '' ) {
-			if( slide<= slideCount ) {
+			if( slide <= slideTotal ) {
 				var element = document.querySelector( '.slide[data-count="'+ slide +'"]' ),
 						top = element.getAttribute( 'data-top' );
-				w.scrollTo( 0, top );
+				this.el.style.top = '-' + top + 'px';
 			} else {
 				alert( 'too far!' );
-				w.scrollTo( 0, 0 );
+				this.el.style.top = '0px';
 				w.history.replaceState({}, '', baseURL+'?slide=1');
+				slide = 1;
 			}
 		} else {
 			w.history.replaceState({}, '', baseURL+'?slide=1');
+			slide = 1;
 		}
-
 		this.scroll( slide, w );
+		this.slide( slide, slideTotal );
 	},
 	scroll: function( slide, w ) {
 		var currSlide = document.querySelector( '.slide[data-count="' + slide + '"]' ),
-				offsetTop = currSlide.getAttribute( 'data-top' ),
-				height = currSlide.offsetHeight,
-				scrollLimit = parseInt( offsetTop ) + parseInt( height ) - parseInt( w.innerHeight );
+				slideshowTop = parseInt( this.el.style.top ),
+				scrollLimit = parseInt( currSlide.getAttribute( 'data-bottom' ) )  + slideshowTop - parseInt( w.innerHeight );
 		w.addEventListener('scroll', function() {
-		  if( w.pageYOffset > scrollLimit ) {
+		  if( w.pageYOffset >= scrollLimit ) {
 		  	w.scrollTo( 0, scrollLimit );
-		  } else if( w.pageYOffset < offsetTop ) {
-		  	w.scrollTo( 0, offsetTop );
 		  }
 		});
-		/*w.addEventListener('scroll', function(e) {
-		  console.log( w.pageYOffset );
-		});*/
+	},
+	slide: function( slide, slideTotal ) {
+		var self = this,
+				currSlide = document.querySelector( '.slide[data-count="' + slide + '"]' ),
+				next;
+		document.onkeydown = function(e) {
+			if( e.keyCode == 39 || e.which == 39 ) {
+				next = parseInt( slide ) + 1;
+				dir = 'r';
+				if( next > 0 && next < slideTotal ) {
+					console.log( 'right' );
+					self.animate( next );
+				}
+			} else if( e.keyCode == 37 || e.which == 37 ) {
+				next = parseInt( slide ) - 1;
+				dir = 'l';
+				if( next > 0 && next < slideTotal ) {
+					console.log( 'left' );
+					self.animate( next );
+				}
+			}
+		};
+	},
+	animate: function( next, dir ) {
+		var nextSlide = document.querySelector( '.slide[data-count="' + next + '"]' ),
+				scrollTop = nextSlide.getAttribute( 'data-top' );
+		console.log( this.el );
+		this.el.style.top = '-' + scrollTop + 'px';
 	}
 };
 document.addEventListener( 'DOMContentLoaded', function() {
