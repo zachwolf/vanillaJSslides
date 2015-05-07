@@ -157,3 +157,56 @@ ol, ul {
       width: 100%;
       max-width: 100%;
       margin-bottom: 15px; }
+
+.arrows {
+  display: none;
+  position: fixed;
+  width: 70px;
+  height: 46px;
+  bottom: 30px;
+  right: 30px; }
+  @media (min-width: 500px) {
+    .arrows {
+      display: block; } }
+  .arrows svg {
+    position: absolute;
+    opacity: .5; }
+  .arrows svg.active {
+    opacity: 1;
+    cursor: pointer; }
+  .arrows .up {
+    top: 0;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    transform: translateX(-50%);
+    opacity: 0; }
+  .arrows .down {
+    bottom: 0;
+    left: 50%;
+    -webkit-transform: translateX(-50%) rotate(180deg);
+    -moz-transform: translateX(-50%) rotate(180deg);
+    -ms-transform: translateX(-50%) rotate(180deg);
+    -o-transform: translateX(-50%) rotate(180deg);
+    transform: translateX(-50%) rotate(180deg);
+    opacity: 0; }
+  .arrows .right {
+    top: 50%;
+    -webkit-transform: translateY(-50%) rotate(90deg);
+    -moz-transform: translateY(-50%) rotate(90deg);
+    -ms-transform: translateY(-50%) rotate(90deg);
+    -o-transform: translateY(-50%) rotate(90deg);
+    transform: translateY(-50%) rotate(90deg);
+    right: 0; }
+  .arrows .left {
+    top: 50%;
+    -webkit-transform: translateY(-50%) rotate(-90deg);
+    -moz-transform: translateY(-50%) rotate(-90deg);
+    -ms-transform: translateY(-50%) rotate(-90deg);
+    -o-transform: translateY(-50%) rotate(-90deg);
+    transform: translateY(-50%) rotate(-90deg);
+    left: 0; }
+  .arrows polygon {
+    fill: #fff; }
