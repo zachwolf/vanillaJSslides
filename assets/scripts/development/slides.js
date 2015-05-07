@@ -4,96 +4,75 @@ function Slider( element ) {
 }
 Slider.prototype = {
 	init: function() {
+
 		var w = window,
-				x = window.innerWidth,
-				y = window.innerHeight;
-
-		this.overflow = this.el.querySelector( '.overflow' );
+				y = window.innerHeight,
+				slideshowHeight = 0,
+				offsetTop = 0,
+				slideOffsets = [0];
 		this.slides = this.el.querySelectorAll( '.slide' );
-
-		var slideHeights = [],
-				slideOffsets = [ 0 ],
-				offsetTop = 0;
-
 		for( var i = 0; i < this.slides.length; i++ ) {
-
 			var self = this.slides[i],
-					count = self.getAttribute( 'data-count' ),
 					content = self.querySelector( '.content' ),
-					contentHeight = content.offsetHeight;
-
-			slideHeights.push( contentHeight );
-
-			if( contentHeight < y ) {
+					slideHeight = content.offsetHeight;
+			if( slideHeight < y ) {
 				self.style.height = y+'px';
+				slideshowHeight += y;
 				offsetTop += y;
-				slideOffsets.push(	offsetTop ); 
-				self.style.top = slideOffsets[i]+'px';
-				self.setAttribute( 'data-scroll', '0' );
+				slideOffsets.push(	offsetTop );
+				self.setAttribute( 'data-top', slideOffsets[i] );
+				self.setAttribute( 'data-bottom', slideOffsets[i] + y ); 
 			} else {
-				self.style.height = contentHeight+'px';
-				offsetTop += contentHeight;
+				self.style.height = slideHeight +'px';
+				slideshowHeight += slideHeight;
+				offsetTop += slideHeight;
 				slideOffsets.push(	offsetTop ); 
-				self.style.top = slideOffsets[i]+'px';
-				self.setAttribute( 'data-scroll', '1' );
+				self.setAttribute( 'data-top', slideOffsets[i] );
+				self.setAttribute( 'data-bottom', slideOffsets[i] + slideHeight );
 			}
 		}
-
-		var newHeight = slideOffsets[slideOffsets.length-1];
-		this.el.style.height = newHeight + 'px';
-
-		this.getSlide( w, this.slides );
-
+		this.el.style.height = slideshowHeight + 'px';
+		this.getSlide( w, i );
 	},
-	getSlide: function( w, slides ) {
-		var slide = getParameterByName('slide');
-
-		if( slide === '' ) {
-
-			var baseURL = w.location.protocol + '//' + w.location.host + w.location.pathname;
+	getSlide: function( w, slideCount ) {
+		var slide = getParameterByName('slide'),
+				baseURL = w.location.protocol + '//' + w.location.host + w.location.pathname;
+		if( slide !== '' ) {
+			if( slide<= slideCount ) {
+				var element = document.querySelector( '.slide[data-count="'+ slide +'"]' ),
+						top = element.getAttribute( 'data-top' );
+				w.scrollTo( 0, top );
+			} else {
+				alert( 'too far!' );
+				w.scrollTo( 0, 0 );
 				w.history.replaceState({}, '', baseURL+'?slide=1');
-
-		} else {
-
-			for( var i = 0; i < slides.length; i++ ) {
-
-				var self = slides[i];
-
-				if( i < ( slide - 1 ) ) {
-					self.offset = parseInt( self.style.height );
-					self.style.top = '-' + self.offset + 'px';
-
-				} else if( i == ( slide - 1 ) ) {
-
-					self.style.top = 0;
-
-				}
 			}
+		} else {
+			w.history.replaceState({}, '', baseURL+'?slide=1');
 		}
-	},
-	navigate: function( i, slide ) {
 
+		this.scroll( slide, w );
+	},
+	scroll: function( slide, w ) {
+		var currSlide = document.querySelector( '.slide[data-count="' + slide + '"]' ),
+				offsetTop = currSlide.getAttribute( 'data-top' ),
+				height = currSlide.offsetHeight,
+				scrollLimit = parseInt( offsetTop ) + parseInt( height ) - parseInt( w.innerHeight );
+		w.addEventListener('scroll', function() {
+		  if( w.pageYOffset > scrollLimit ) {
+		  	w.scrollTo( 0, scrollLimit );
+		  } else if( w.pageYOffset < offsetTop ) {
+		  	w.scrollTo( 0, offsetTop );
+		  }
+		});
+		/*w.addEventListener('scroll', function(e) {
+		  console.log( w.pageYOffset );
+		});*/
 	}
 };
 document.addEventListener( 'DOMContentLoaded', function() {
 	var slider = new Slider( '.slideshow' );
 });
-
-/*function doSetTimeout(i) {
-	setTimeout(function() {
-		console.log(i);
-	}, i*1000);
-}
-function getOffset( el ) {
-  var _x = 0;
-  var _y = 0;
-  while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
-    _x += el.offsetLeft - el.scrollLeft;
-    _y += el.offsetTop - el.scrollTop;
-    el = el.offsetParent;
-  }
-  return { top: _y, left: _x };
-}*/
 function getParameterByName(name) {
   name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
   var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
