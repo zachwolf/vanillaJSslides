@@ -11,10 +11,10 @@ var rename = require('gulp-rename');
 
 // compile our sass plugins to css
 gulp.task('sass-plugins', function() {
-  return gulp.src('assets/styles/sass/_plugins/*.scss')
+  return gulp.src('assets/styles/development/sass/_plugins/*.scss')
     .pipe(sass())
     .pipe(rename('plugins.css'))
-    .pipe(gulp.dest('assets/styles/css'))
+    .pipe(gulp.dest('assets/styles/developmentcss'))
     .pipe(minify())
     .pipe(rename('plugins.min.css'))
     .pipe(gulp.dest('assets/styles/production'));
@@ -22,9 +22,9 @@ gulp.task('sass-plugins', function() {
 
 // compile our site sass
 gulp.task('sass', function() {
-  return gulp.src('assets/styles/sass/*.scss')
+  return gulp.src('assets/styles/development/sass/*.scss')
     .pipe(sass())
-    .pipe(gulp.dest('assets/styles/css'))
+    .pipe(gulp.dest('assets/styles/development/css'))
     .pipe(minify())
     .pipe(rename(function (path) {
       path.extname = ".min.css"
@@ -61,9 +61,9 @@ gulp.task('scripts', function() {
 
 // watch files For changes
 gulp.task('watch', function() {
-  gulp.watch('assets/styles/sass/plugins/*.scss', ['sass-plugins']);
-  gulp.watch('assets/styles/sass/*.scss', ['sass']);
-  gulp.watch('assets/styles/sass/_plugins/*.js', ['js-plugins']);
+  gulp.watch('assets/styles/development/sass/plugins/*.scss', ['sass-plugins']);
+  gulp.watch('assets/styles/development/sass/*.scss', ['sass']);
+  gulp.watch('assets/styles/development/sass/_plugins/*.js', ['js-plugins']);
   gulp.watch('assets/scripts/development/_plugins/*.js', ['lint', 'js-plugins']);
   gulp.watch('assets/scripts/development/*.js', ['lint', 'scripts']);
 });

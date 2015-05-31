@@ -104,6 +104,9 @@ ol, ul {
   padding-left: 60px;
   margin-bottom: 15px; }
 
+.wrap {
+  overflow: hidden; }
+
 .slideshow {
   background: #ff006c;
   /* Old browsers */
@@ -122,22 +125,17 @@ ol, ul {
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff006c', endColorstr='#25b7c4',GradientType=0 );
   /* IE6-9 */
   width: 100%;
-  position: absolute;
+  position: relative;
   -webkit-transition: all 300ms ease;
   -moz-transition: all 300ms ease;
   -ms-transition: all 300ms ease;
   -o-transition: all 300ms ease;
   transition: all 300ms ease; }
-  .slideshow .overflow {
-    overflow: hidden; }
   .slideshow .slide {
     width: 100%;
-    position: relative;
-    -webkit-transition: all 300ms ease;
-    -moz-transition: all 300ms ease;
-    -ms-transition: all 300ms ease;
-    -o-transition: all 300ms ease;
-    transition: all 300ms ease; }
+    position: relative; }
+    .slideshow .slide.active {
+      display: block; }
   .slideshow .content {
     padding-top: 30px;
     padding-bottom: 30px;

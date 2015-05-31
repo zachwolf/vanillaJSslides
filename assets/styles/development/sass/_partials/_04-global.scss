@@ -1,5 +1,5 @@
-.center {
-	//@include center(80%);
+.wrap {
+	overflow: hidden;
 }
 
 .slideshow {
@@ -12,17 +12,16 @@
 	background: linear-gradient(to bottom,  #ff006c 0%,#7d2ded 50%,#25b7c4 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff006c', endColorstr='#25b7c4',GradientType=0 ); /* IE6-9 */
 	width: 100%;
-	position: absolute;
+	position: relative;
 	@include transition(all, 300ms, ease);
-
-	.overflow {
-		overflow: hidden;
-	}
 
 	.slide {
 		width: 100%;
 		position: relative;
-		@include transition(all, 300ms, ease);
+
+		&.active {
+			display: block;
+		}
 	}
 
 	.content {

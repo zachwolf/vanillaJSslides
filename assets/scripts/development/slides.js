@@ -1,171 +1,197 @@
-function Slider( element ) {
-	this.el = document.querySelector( element );
-	this.slides = this.el.querySelectorAll( '.slide' );
-	this.arrows = document.querySelectorAll( '.arrows svg' );
-	this.w = window;
-	this.baseURL = this.w.location.protocol + '//' + this.w.location.host + this.w.location.pathname;
-	this.init();
-}
-Slider.prototype = {
-	init: function() {
-		for( var i = 0; i < slides.length; i++ ) {}
-		this.getSlide( i );
-	},
-	getSlide: function( slideTotal ) {
-		var slide = getParameterByName('slide');
-		if( slide !== '' ) {
-			if( slide <= slideTotal ) {
-				var element = document.querySelector( '.slide[data-count="'+ slide +'"]' ),
-						top = element.getAttribute( 'data-top' );
-				this.el.style.top = '-' + top + 'px';
-				this.changeClasses( slide, element );
-			} else {
-				alert( 'too far!' );
-				this.el.style.top = '0px';
-				this.w.history.replaceState({}, '', this.baseURL+'?slide=1');
-				slide = 1;
-			}
-		} else {
-			this.w.history.replaceState({}, '', this.baseURL+'?slide=1');
-			slide = 1;
-		}
-		this.slide( slideTotal );
-		this.arrowz( slideTotal );
-	},
-	changeClasses: function( next, element ) {
-		for( var k = 0; k < this.slides.length; k++ ) {
-			this.slides[k].classList.remove( 'active' );
-		}
-		for( var a = 0; a < this.arrows.length; a++ ) {
-			this.arrows[a].classList.remove( 'active' );
-		}
-		var up = document.querySelector( 'svg.up' ),
-				down = document.querySelector( 'svg.down' ),
-				left = document.querySelector( 'svg.left' ),
-				right = document.querySelector( 'svg.right' ),
-				scroll = element.getAttribute( 'data-scroll' );
-		element.classList.add( 'active' ); 
-		if( next == 1 ) {
-			right.classList.add( 'active' );
-		} else if( next > 1 && next < k ) {
-			left.classList.add( 'active' );
-			right.classList.add( 'active' );
-		} else if( next == k ) {
-			left.classList.add( 'active' );
-		}
-		/*if( scroll == 1 ) {
-			up.classList.add( 'active' );
-			down.classList.add( 'active' );
-		}*/
-	},
-	slide: function( slideTotal ) {
-		var self = this,
-				slide, currSlide, next;
-		document.onkeydown = function(e) {
-			if( e.keyCode == 39 || e.which == 39 ) {
-				slide = getParameterByName( 'slide' );
-				currSlide = document.querySelector( '.slide[data-count="' + slide + '"]' );
-				next = parseInt( slide ) + 1;
-				if( next > 0 && next <= slideTotal ) {
-					self.animate( next );
-				}
-			} else if( e.keyCode == 37 || e.which == 37 ) {
-				slide = getParameterByName( 'slide' );
-				currSlide = document.querySelector( '.slide[data-count="' + slide + '"]' );
-				next = parseInt( slide ) - 1;
-				if( next > 0 && next <= slideTotal ) {
-					self.animate( next );
-				}
-			}
+var Slider = (function () {
+	//var _private = "..."
+  
+  /* 	set up variables, init function  */
+	function Slider ( element ) { 
+		this.par = document.querySelector( '.wrap' );
+		this.el = document.querySelector( element );
+		this.slides = this.el.querySelectorAll( '.slide' );
+		this.slideContent = this.el.querySelectorAll( '.content' );
+		this.arrows = document.querySelectorAll( '.arrows svg' );
+		this.w = window;
+		this.baseURL = this.w.location.protocol + '//' + this.w.location.host + this.w.location.pathname;
+		ARROWS = {
+			LEFT: this.par.querySelector( '.left' ),
+			RIGHT: this.par.querySelector( '.right' )
 		};
-	},
-	arrowz: function( slideTotal ) {
-		for( var p = 0; p < this.arrows.length; p++ ) {
-			var self = this,
-					arrow = this.arrows[p];
-			self.clicky( arrow, slideTotal );
-		}
-	},
-	clicky: function( element, slideTotal ) {
-		var self = this;
-		element.addEventListener('click', function() {
-			var el = this,
-					dir = el.getAttribute( 'data-dir' );
-			if( dir == 'r' ) {
-				slide = getParameterByName( 'slide' );
-				currSlide = document.querySelector( '.slide[data-count="' + slide + '"]' );
-				next = parseInt( slide ) + 1;
-				if( next > 0 && next <= slideTotal ) {
-				self.animate( next );
-				}
-			} else if( dir == 'l' ) {
-				slide = getParameterByName( 'slide' );
-				currSlide = document.querySelector( '.slide[data-count="' + slide + '"]' );
-				next = parseInt( slide ) - 1;
-				if( next > 0 && next <= slideTotal ) {
-				self.animate( next );
-				}
+		CLASSLIST = {
+			ACTIVE: 'active'
+		};
+		KEY = {
+		 	LEFT: 37,
+		 	RIGHT: 39
+		};
+
+		this.init();
+  	/*	call keysMoveSlides() */
+		//this.keysMoveSlides();
+		//this.clicksMoveSlides();
+	}
+  
+  Slider.prototype.init = function () {
+  	/* 	find window height,
+  			set up empty array for slide heights  */ 
+  	var winHeight = this.w.innerHeight,
+  			slideHeights = [];
+
+  	/* 	find all height of the slide's contents div  */
+  	for( var i = 0; i < this.slideContent.length; i++ ) {
+  		var slideHeight = this.slideContent[i].offsetHeight;
+  		/* 	if the slide content height is less than the window height,
+  			 	set slide height and data-height attribute equal to the window height
+  			 	push to slideHeights  */
+  		if( slideHeight <= winHeight ) {
+  			this.slides[i].style.height = winHeight + 'px';
+  			this.slides[i].setAttribute( 'data-height', winHeight );
+  			slideHeights.push( winHeight );
+  		/*	else set data-height attribute to the contents height,
+  				push to slideHeights  */
+  		} else {
+  			this.slides[i].style.height = slideHeight + 'px';
+  			this.slides[i].setAttribute( 'data-height', slideHeight );
+  			slideHeights.push( slideHeight );
+  		}
+
+  		/*	add up the slide heights */
+ 			var slideOffset = 0;
+  		for( var k = 0; k < slideHeights.length; k++ ) {
+  			slideOffset += slideHeights[k];
+  		}
+
+  		/*	find the offset of each slide, set data-offset for each slide */
+  		slideOffset = slideOffset - slideHeights[i];
+  		this.slides[i].setAttribute( 'data-offset', slideOffset );
+  	}
+
+  	/* 	set the wrap height to the first slide's height  */
+  	this.par.style.height = slideHeights[0] + 'px';
+
+  	/* call setSlideParam() */
+  	this.setSlideParam();
+  };
+
+  Slider.prototype.setSlideParam = function () {
+  	/*	get slide parameter */
+  	var slideParam = getParameterByName( 'slide' ),
+  			currSlide;
+
+  	/* 	if slide parameter is empty, set to 1 */
+  	if( slideParam === '' ) {
+  		currSlide = this.slides[ 0 ];
+  		this.w.history.replaceState({}, '', this.baseURL+'?slide=1');
+  		currSlide.classList.add( CLASSLIST.ACTIVE );
+  	/*	else set that slide to active */
+  	} else {
+  		currSlide = this.slides[ slideParam - 1 ];
+  		var currSlideHeight = currSlide.getAttribute( 'data-height' ),
+  				currSlideOffset = currSlide.getAttribute( 'data-offset' );
+  		currSlide.classList.add( 'active' );
+  		this.el.style.marginTop = '-' + currSlideOffset + 'px';
+  		this.par.style.height = currSlideHeight + 'px';
+  	}
+
+  	/*	call setArrows() */
+  	this.setArrows( currSlide );
+  	//this.clicksMoveSlides( currSlide );
+  };
+
+  Slider.prototype.setArrows = function ( currSlide ) {
+  	/*	get current slide count */
+  	var currSlideCount = currSlide.getAttribute('data-count');
+
+  	/*	show arrows depending on what the current slide is */
+  	if( currSlideCount == 1 ) {
+  		ARROWS.LEFT.classList.remove( CLASSLIST.ACTIVE );
+  		ARROWS.RIGHT.classList.add( CLASSLIST.ACTIVE );
+  	} else if( currSlideCount == this.slides.length ) {
+  		ARROWS.LEFT.classList.add( CLASSLIST.ACTIVE );
+  		ARROWS.RIGHT.classList.remove( CLASSLIST.ACTIVE );
+  	} else {
+  		ARROWS.LEFT.classList.add( CLASSLIST.ACTIVE );
+  		ARROWS.RIGHT.classList.add( CLASSLIST.ACTIVE );
+  	}
+
+  	this.keysMoveSlides( currSlideCount );
+		//this.clicksMoveSlides( currSlide );
+  };
+
+  Slider.prototype.keysMoveSlides = function ( currSlideCount ) {
+  	var self = this,
+  			slideTotal = this.slides.length,
+  			nextSlideCount;
+
+  	/* 	on keydown, set set nextSlideCount and call animateSlides() */
+  	document.onkeydown = function(e) {
+  		if( e.keyCode == KEY.LEFT || e.which == KEY.LEFT ) {
+  			if( currSlideCount > 1 ) {
+  				nextSlideCount = parseInt(currSlideCount) - 1;
+  				self.slides[ currSlideCount - 1 ].classList.remove( CLASSLIST.ACTIVE );
+  				self.setArrows( self.slides[ nextSlideCount ] );
+  				self.animateSlides( nextSlideCount );
+  			}
+  		} else if( e.keyCode == KEY.RIGHT || e.which == KEY.RIGHT ) {
+  			if( currSlideCount < slideTotal ) {
+  				nextSlideCount = parseInt(currSlideCount) + 1;
+  				self.slides[ currSlideCount - 1 ].classList.remove( CLASSLIST.ACTIVE );
+  				self.setArrows( self.slides[ nextSlideCount - 1 ] );
+  				self.animateSlides( nextSlideCount );
+  			}
+  		}  		
+  	};
+  };
+
+  Slider.prototype.clicksMoveSlides = function ( currSlide ) {
+  	var self = this,
+  			slideTotal = this.slides.length,
+  			currSlideCount = currSlide.getAttribute( 'data-count' ),
+  			nextSlideCount;
+
+		ARROWS.LEFT.addEventListener( 'click', function () {
+			if( currSlideCount > 1 ) {
+				nextSlideCount = parseInt(currSlideCount) - 1;
+				self.slides[ currSlideCount - 1 ].classList.remove( CLASSLIST.ACTIVE );
+				self.setArrows( self.slides[ nextSlideCount ] );
+				self.animateSlides( nextSlideCount );
 			}
 		});
-	},
-	animate: function( next ) {
-		var nextSlide = document.querySelector( '.slide[data-count="' + next + '"]' ),
-				scrollTop = nextSlide.getAttribute( 'data-top' );
-		this.el.style.top = '-' + scrollTop + 'px';
-		this.w.history.replaceState({}, '', this.baseURL+'?slide=' + next);
-		this.changeClasses( next, nextSlide );
-	}
-};
+
+		ARROWS.RIGHT.addEventListener( 'click', function () {
+			if( currSlideCount < slideTotal ) {
+				nextSlideCount = parseInt(currSlideCount) + 1;
+				self.slides[ currSlideCount - 1 ].classList.remove( CLASSLIST.ACTIVE );
+				self.setArrows( self.slides[ nextSlideCount - 1 ] );
+				self.animateSlides( nextSlideCount );
+			}
+		});
+  };
+
+  Slider.prototype.animateSlides = function ( nextSlideCount ) {
+  	/*	get nextSlide, its offset and height */
+		var nextSlide = this.slides[ nextSlideCount - 1 ],
+				nextSlideOffset = nextSlide.getAttribute( 'data-offset' ),
+				nextSlideHeight = nextSlide.getAttribute( 'data-height' );
+		/*	move slideshow to show the next slide */
+		this.el.style.marginTop = '-' + nextSlideOffset + 'px';
+		/*	set the wrap height to the next slide's height */
+		this.par.style.height = nextSlideHeight + 'px';
+		/*	update the URL slide parameter */
+		this.w.history.replaceState({}, '', this.baseURL+'?slide=' + nextSlideCount);
+
+		this.setArrows( nextSlide );
+  };
+  
+  return Slider;
+}());
+
 document.addEventListener( 'DOMContentLoaded', function() {
 	var slider = new Slider( '.slideshow' );
 });
+
+
+/*	get URL parameter */
 function getParameterByName(name) {
   name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
   var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
       results = regex.exec(location.search);
   return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}
-slidesInit();
-window.addEventListener('scroll', function() {
-	var slideshow = document.querySelector( '.slideshow' ),
-			activeSlide = slideshow.querySelector( '.active' ),
-			slideshowTop = parseInt( slideshow.style.top ),
-			scrollLimit = parseInt( activeSlide.getAttribute( 'data-bottom' ) )  + slideshowTop - parseInt( window.innerHeight );
-	if( window.pageYOffset >= scrollLimit ) {
-  	window.scrollTo( 0, scrollLimit );
-  }
-});
-window.addEventListener('resize', function() {
-	slidesInit();
-});
-function slidesInit() {
-	var y = window.innerHeight,
-			slideshow = document.querySelector( '.slideshow' );
-			slideshowHeight = 0,
-			offsetTop = 0,
-			slideOffsets = [0],
-			slides = slideshow.querySelectorAll( '.slide' );
-	for( var i = 0; i < slides.length; i++ ) {
-		var self = slides[i],
-				content = self.querySelector( '.content' ),
-				slideHeight = content.offsetHeight;
-		if( slideHeight < y ) {
-			self.style.height = y+'px';
-			slideshowHeight += y;
-			offsetTop += y;
-			slideOffsets.push(	offsetTop );
-			self.setAttribute( 'data-top', slideOffsets[i] );
-			self.setAttribute( 'data-bottom', slideOffsets[i] + y ); 
-			self.setAttribute( 'data-scroll', '0' );
-		} else {
-			self.style.height = slideHeight +'px';
-			slideshowHeight += slideHeight;
-			offsetTop += slideHeight;
-			slideOffsets.push(	offsetTop ); 
-			self.setAttribute( 'data-top', slideOffsets[i] );
-			self.setAttribute( 'data-bottom', slideOffsets[i] + slideHeight );
-			self.setAttribute( 'data-scroll', '1' );
-		}
-	}
-	slideshow.style.height = slideshowHeight + 'px';
 }
