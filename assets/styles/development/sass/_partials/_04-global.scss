@@ -41,16 +41,11 @@
 }
 
 .arrows {
-	display: none;
   position: fixed;
   width: 70px;
   height: 46px;
 	bottom: 30px;
   right: 30px;
-
-	@media (min-width: $bp-arrows-show) {
-		display: block;
-	}
 	
 	svg {
 		position: absolute;

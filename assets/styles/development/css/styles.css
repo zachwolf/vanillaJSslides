@@ -157,15 +157,11 @@ ol, ul {
       margin-bottom: 15px; }
 
 .arrows {
-  display: none;
   position: fixed;
   width: 70px;
   height: 46px;
   bottom: 30px;
   right: 30px; }
-  @media (min-width: 500px) {
-    .arrows {
-      display: block; } }
   .arrows svg {
     position: absolute;
     opacity: .5; }

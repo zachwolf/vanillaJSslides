@@ -92,7 +92,6 @@ var Slider = (function () {
 
   	/*	call setArrows() */
   	this.setArrows( currSlide );
-  	//this.clicksMoveSlides( currSlide );
   };
 
   Slider.prototype.setArrows = function ( currSlide ) {
@@ -112,7 +111,7 @@ var Slider = (function () {
   	}
 
   	this.keysMoveSlides( currSlideCount );
-		//this.clicksMoveSlides( currSlide );
+		//this.clicksMoveSlides( currSlideCount );
   };
 
   Slider.prototype.keysMoveSlides = function ( currSlideCount ) {
@@ -126,31 +125,30 @@ var Slider = (function () {
   			if( currSlideCount > 1 ) {
   				nextSlideCount = parseInt(currSlideCount) - 1;
   				self.slides[ currSlideCount - 1 ].classList.remove( CLASSLIST.ACTIVE );
-  				self.setArrows( self.slides[ nextSlideCount ] );
+  				//self.setArrows( self.slides[ nextSlideCount ] );
   				self.animateSlides( nextSlideCount );
   			}
   		} else if( e.keyCode == KEY.RIGHT || e.which == KEY.RIGHT ) {
   			if( currSlideCount < slideTotal ) {
   				nextSlideCount = parseInt(currSlideCount) + 1;
   				self.slides[ currSlideCount - 1 ].classList.remove( CLASSLIST.ACTIVE );
-  				self.setArrows( self.slides[ nextSlideCount - 1 ] );
+  				//self.setArrows( self.slides[ nextSlideCount - 1 ] );
   				self.animateSlides( nextSlideCount );
   			}
   		}  		
   	};
   };
 
-  Slider.prototype.clicksMoveSlides = function ( currSlide ) {
+  /*Slider.prototype.clicksMoveSlides = function ( currSlideCount ) {
   	var self = this,
   			slideTotal = this.slides.length,
-  			currSlideCount = currSlide.getAttribute( 'data-count' ),
   			nextSlideCount;
 
 		ARROWS.LEFT.addEventListener( 'click', function () {
 			if( currSlideCount > 1 ) {
 				nextSlideCount = parseInt(currSlideCount) - 1;
 				self.slides[ currSlideCount - 1 ].classList.remove( CLASSLIST.ACTIVE );
-				self.setArrows( self.slides[ nextSlideCount ] );
+				//self.setArrows( self.slides[ nextSlideCount ] );
 				self.animateSlides( nextSlideCount );
 			}
 		});
@@ -159,11 +157,11 @@ var Slider = (function () {
 			if( currSlideCount < slideTotal ) {
 				nextSlideCount = parseInt(currSlideCount) + 1;
 				self.slides[ currSlideCount - 1 ].classList.remove( CLASSLIST.ACTIVE );
-				self.setArrows( self.slides[ nextSlideCount - 1 ] );
+				//self.setArrows( self.slides[ nextSlideCount - 1 ] );
 				self.animateSlides( nextSlideCount );
 			}
 		});
-  };
+  };*/
 
   Slider.prototype.animateSlides = function ( nextSlideCount ) {
   	/*	get nextSlide, its offset and height */
@@ -184,6 +182,10 @@ var Slider = (function () {
 }());
 
 document.addEventListener( 'DOMContentLoaded', function() {
+	var slider = new Slider( '.slideshow' );
+});
+
+window.addEventListener('resize', function() {
 	var slider = new Slider( '.slideshow' );
 });
 
