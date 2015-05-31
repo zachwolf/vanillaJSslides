@@ -1,5 +1,4 @@
 var Slider = (function () {
-	//var _private = "..."
   
   /* 	set up variables, init function  */
 	function Slider ( element ) { 
@@ -66,7 +65,6 @@ var Slider = (function () {
   	/* 	set the wrap height to the first slide's height  */
   	this.par.style.height = slideHeights[0] + 'px';
 
-  	/* call setSlideParam() */
   	this.setSlideParam();
   };
 
@@ -90,7 +88,6 @@ var Slider = (function () {
   		this.par.style.height = currSlideHeight + 'px';
   	}
 
-  	/*	call setArrows() */
   	this.setArrows( currSlide );
   };
 
@@ -168,7 +165,7 @@ var Slider = (function () {
 		var nextSlide = this.slides[ nextSlideCount - 1 ],
 				nextSlideOffset = nextSlide.getAttribute( 'data-offset' ),
 				nextSlideHeight = nextSlide.getAttribute( 'data-height' );
-		/*	move slideshow to show the next slide */
+		/*	move .slideshow to show the next slide */
 		this.el.style.marginTop = '-' + nextSlideOffset + 'px';
 		/*	set the wrap height to the next slide's height */
 		this.par.style.height = nextSlideHeight + 'px';
