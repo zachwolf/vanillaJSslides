@@ -22,9 +22,6 @@ var Slider = (function () {
 		};
 
 		this.init();
-  	/*	call keysMoveSlides() */
-		//this.keysMoveSlides();
-		//this.clicksMoveSlides();
 	}
   
   Slider.prototype.init = function () {
@@ -93,7 +90,10 @@ var Slider = (function () {
 
   Slider.prototype.setArrows = function ( currSlide ) {
   	/*	get current slide count */
-  	var currSlideCount = currSlide.getAttribute('data-count');
+  	var self = this,
+        slideTotal = this.slides.length,
+        currSlideCount = currSlide.getAttribute('data-count'),
+        nextSlideCount;
 
   	/*	show arrows depending on what the current slide is */
   	if( currSlideCount == 1 ) {
@@ -107,58 +107,47 @@ var Slider = (function () {
   		ARROWS.RIGHT.classList.add( CLASSLIST.ACTIVE );
   	}
 
-  	this.keysMoveSlides( currSlideCount );
-		//this.clicksMoveSlides( currSlideCount );
+	  /*  on keydown, set set nextSlideCount and call animateSlides() */
+    document.onkeydown = function(e) {
+      if( e.keyCode == KEY.LEFT || e.which == KEY.LEFT ) {
+        if( currSlideCount > 1 ) {
+          self.moveLeft( currSlideCount );
+        }
+      } else if( e.keyCode == KEY.RIGHT || e.which == KEY.RIGHT ) {
+        if( currSlideCount < slideTotal ) {
+          self.moveRight( currSlideCount );
+        }
+      }     
+    };
+
+    /*  arrow left click */
+    ARROWS.LEFT.addEventListener( 'click', function () {
+      if( currSlideCount > 1 ) {
+        self.moveLeft( currSlideCount );
+      }
+    });
+
+    /*  arrow right click */
+    ARROWS.RIGHT.addEventListener( 'click', function () {
+      if( currSlideCount < slideTotal ) {
+        self.moveRight( currSlideCount );
+      }
+    });
   };
 
-  Slider.prototype.keysMoveSlides = function ( currSlideCount ) {
-  	var self = this,
-  			slideTotal = this.slides.length,
-  			nextSlideCount;
-
-  	/* 	on keydown, set set nextSlideCount and call animateSlides() */
-  	document.onkeydown = function(e) {
-  		if( e.keyCode == KEY.LEFT || e.which == KEY.LEFT ) {
-  			if( currSlideCount > 1 ) {
-  				nextSlideCount = parseInt(currSlideCount) - 1;
-  				self.slides[ currSlideCount - 1 ].classList.remove( CLASSLIST.ACTIVE );
-  				//self.setArrows( self.slides[ nextSlideCount ] );
-  				self.animateSlides( nextSlideCount );
-  			}
-  		} else if( e.keyCode == KEY.RIGHT || e.which == KEY.RIGHT ) {
-  			if( currSlideCount < slideTotal ) {
-  				nextSlideCount = parseInt(currSlideCount) + 1;
-  				self.slides[ currSlideCount - 1 ].classList.remove( CLASSLIST.ACTIVE );
-  				//self.setArrows( self.slides[ nextSlideCount - 1 ] );
-  				self.animateSlides( nextSlideCount );
-  			}
-  		}  		
-  	};
+  Slider.prototype.moveLeft = function ( currSlideCount ) {
+    /*  get nextSlideCount, animate slides left */
+    nextSlideCount = parseInt(currSlideCount) - 1;
+    this.slides[ currSlideCount - 1 ].classList.remove( CLASSLIST.ACTIVE );
+    this.animateSlides( nextSlideCount );
   };
 
-  /*Slider.prototype.clicksMoveSlides = function ( currSlideCount ) {
-  	var self = this,
-  			slideTotal = this.slides.length,
-  			nextSlideCount;
-
-		ARROWS.LEFT.addEventListener( 'click', function () {
-			if( currSlideCount > 1 ) {
-				nextSlideCount = parseInt(currSlideCount) - 1;
-				self.slides[ currSlideCount - 1 ].classList.remove( CLASSLIST.ACTIVE );
-				//self.setArrows( self.slides[ nextSlideCount ] );
-				self.animateSlides( nextSlideCount );
-			}
-		});
-
-		ARROWS.RIGHT.addEventListener( 'click', function () {
-			if( currSlideCount < slideTotal ) {
-				nextSlideCount = parseInt(currSlideCount) + 1;
-				self.slides[ currSlideCount - 1 ].classList.remove( CLASSLIST.ACTIVE );
-				//self.setArrows( self.slides[ nextSlideCount - 1 ] );
-				self.animateSlides( nextSlideCount );
-			}
-		});
-  };*/
+  Slider.prototype.moveRight = function ( currSlideCount ) {
+    /*  get nextSlideCount, animate slides right */
+    nextSlideCount = parseInt(currSlideCount) + 1;
+    this.slides[ currSlideCount - 1 ].classList.remove( CLASSLIST.ACTIVE );
+    this.animateSlides( nextSlideCount );
+  };
 
   Slider.prototype.animateSlides = function ( nextSlideCount ) {
   	/*	get nextSlide, its offset and height */
