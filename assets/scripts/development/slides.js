@@ -121,18 +121,19 @@ var Slider = (function () {
     };
 
     /*  arrow left click */
-    ARROWS.LEFT.addEventListener( 'click', function () {
+
+    document.getElementById('arrow-left').onclick = function () {
       if( currSlideCount > 1 ) {
         self.moveLeft( currSlideCount );
       }
-    });
+    };
 
     /*  arrow right click */
-    ARROWS.RIGHT.addEventListener( 'click', function () {
+    document.getElementById('arrow-right').onclick = function () {
       if( currSlideCount < slideTotal ) {
         self.moveRight( currSlideCount );
       }
-    });
+    };
   };
 
   Slider.prototype.moveLeft = function ( currSlideCount ) {
