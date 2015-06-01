@@ -121,7 +121,6 @@ var Slider = (function () {
     };
 
     /*  arrow left click */
-
     document.getElementById('arrow-left').onclick = function () {
       if( currSlideCount > 1 ) {
         self.moveLeft( currSlideCount );
