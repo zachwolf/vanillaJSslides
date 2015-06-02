@@ -9,6 +9,10 @@ var Slider = (function () {
 		this.arrows = document.querySelectorAll( '.arrows svg' );
 		this.w = window;
 		this.baseURL = this.w.location.protocol + '//' + this.w.location.host + this.w.location.pathname;
+
+    // your scope is wonky here. ARROWS, CLASSLIST, and KEY are being exposed as global variables
+    // it works, but it's likely to break if you use any of the names again
+
 		ARROWS = {
 			LEFT: this.par.querySelector( '.left' ),
 			RIGHT: this.par.querySelector( '.right' )
@@ -32,6 +36,9 @@ var Slider = (function () {
 
   	/* 	find all height of the slide's contents div  */
   	for( var i = 0; i < this.slideContent.length; i++ ) {
+      // try to avoid declaring variables in loops
+      // something like this maybe?
+      // for( var i = 0, slideHeight, slideOffset = 0; i < this.slideContent.length; i++ ) {
   		var slideHeight = this.slideContent[i].offsetHeight;
   		/* 	if the slide content height is less than the window height,
   			 	set slide height and data-height attribute equal to the window height
@@ -96,9 +103,19 @@ var Slider = (function () {
         nextSlideCount;
 
   	/*	show arrows depending on what the current slide is */
+    // generally always use `===` other wise you might get unexpected results with how javascript handles truthy values
+    // if( currSlideCount === 1 ) {
+    // otherwise:
+    // true == 1 -> true
+    // true === 1 -> false
+    // "1" == 1 -> true
+    // "1" === 1 -> false
+    // [1] == 1 -> true
+    // etc...
   	if( currSlideCount == 1 ) {
   		ARROWS.LEFT.classList.remove( CLASSLIST.ACTIVE );
   		ARROWS.RIGHT.classList.add( CLASSLIST.ACTIVE );
+    // same as above
   	} else if( currSlideCount == this.slides.length ) {
   		ARROWS.LEFT.classList.add( CLASSLIST.ACTIVE );
   		ARROWS.RIGHT.classList.remove( CLASSLIST.ACTIVE );
@@ -123,6 +140,7 @@ var Slider = (function () {
     /*  arrow left click */
     document.getElementById('arrow-left').onclick = function () {
       if( currSlideCount > 1 ) {
+        // I think it'd be better to store currSlideCount on the class rather than pass it around as an argument
         self.moveLeft( currSlideCount );
       }
     };
@@ -171,6 +189,8 @@ document.addEventListener( 'DOMContentLoaded', function() {
 	var slider = new Slider( '.slideshow' );
 });
 
+// i think it'd be better to use a resize function in Slider, rather than creating a new one each time this event is fired
+// doing it this way might cause some performance issues
 window.addEventListener('resize', function() {
 	var slider = new Slider( '.slideshow' );
 });
